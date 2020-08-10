@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!---vue组件基础-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script><!--使用cdn的方式引入vue-->
+    <div id="app">
+        {{message}}
+        <todo-list></todo-list>
+    </div>
+    <script>
+        Vue.component('todo-item',{
+           props:{//给组件传参数
+            title: String,
+            del:{
+                type: Boolean,
+                default: false,
+            },
+           },
+           //组件显示模板
+           template: `
+           <li>
+             <span v-if="!del">{{title}}</span>
+             <span v-else style="text-decoration: line-through;">{{title}}</span>
+             <button v-show="!del">删除</button>
+           </li>
+           `, 
+           data: function(){//为了不污染数据，闭包写法，返回给调用组件的数据，
+               return {}
+           },
+           method:{//定义方法
+           },  
+        })
+        Vue.component('todo-list',{
+            template:`
+            <ul>
+             <todo-item v-for="item in list" data-test="test" :title="item.title" :del="item.del"></todo-item>
+            </ul>
+            `,
+            data: function(){
+                return {
+                    list:[
+                {
+                    title:'课程1',
+                    del:false
+                },
+                {
+                    title:'课程2',
+                    del:true
+                }
+            ],
+                }
+            },
+        })
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            message: 'hello world',
+        }
+    })
+    </script>
+</body>
+</html>
