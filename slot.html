@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+<body><!--插槽：vue中的内容分发-->
     <!---vue组件基础-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script><!--使用cdn的方式引入vue-->
     <div id="app">
         {{message}}
         <todo-list>
+            <template v-slot><!--默认插槽--->
             <!--自定义事件 使用@+方法名-->
-            <todo-item @delete="handleDelete" v-for="item in list" data-test="test" :title="item.title" :del="item.del"></todo-item>
+            <todo-item @delete="handleDelete" v-for="item in list" data-test="test" :title="item.title" :del="item.del">
+            <span slot="pre-icon">前置图标</span><!--vue2.5语法-->
+            <span slot="suf-icon">后置图标</span><!--具名插槽-->
+            <template v-slot:slot-test>
+              <spn>vue2.6版本之后的插槽简写</spn>           
+            </template>
+            </todo-item>
+            </template>
         </todo-list>
     </div>
     <script>
@@ -27,8 +35,11 @@
            //组件显示模板
            template: `
            <li>
+             <slot name="pre-icon"></slot>
              <span v-if="!del">{{title}}</span>
              <span v-else style="text-decoration: line-through;">{{title}}</span>
+             <slot name="suf-icon"></slot>
+             <slot name="slot-test"></slot>
              <button v-show="!del" @click="handleClick">删除</button><!--使用原生dom绑定事件的方式,使用@+事件名,比如@click-->
            </li>
            `, 
