@@ -15,11 +15,13 @@
             <!--自定义事件 使用@+方法名-->
             <todo-item @delete="handleDelete" v-for="item in list" data-test="test" :title="item.title" :del="item.del">
             <span slot="pre-icon">前置图标</span><!--vue2.5语法-->
-            <span slot="suf-icon">后置图标</span><!--具名插槽-->
             <template v-slot:slot-test>
-              <spn>vue2.6版本之后的插槽简写</spn>           
+              <span>vue2.6版本之后的插槽简写</span>           
             </template>
-            </todo-item>
+            <template v-slot:pre-icon="{value}"><!--作用域插槽：返回组件的函数-->
+                <span>前置图标{{value}}</span>
+            </template>
+           </todo-item>
             </template>
         </todo-list>
     </div>
@@ -35,16 +37,18 @@
            //组件显示模板
            template: `
            <li>
-             <slot name="pre-icon"></slot>
+             <slot name="pre-icon" :value="value"></slot>
              <span v-if="!del">{{title}}</span>
              <span v-else style="text-decoration: line-through;">{{title}}</span>
-             <slot name="suf-icon"></slot>
+             <slot name="suf-icon">😀</slot>
              <slot name="slot-test"></slot>
              <button v-show="!del" @click="handleClick">删除</button><!--使用原生dom绑定事件的方式,使用@+事件名,比如@click-->
            </li>
            `, 
-           data: function(){//为了不污染数据，闭包写法，返回给调用组件的数据，
-               return {}
+           data: function(){//为了不污染数据，闭包写法，返回给调用组件的数据
+               return {
+                   value:Math.random()
+               }
            },
            methods:{//定义方法
            handleClick(){
